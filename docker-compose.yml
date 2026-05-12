@@ -1,0 +1,42 @@
+services:
+    postgres:
+        image: postgres:17-alpine
+        environment:
+            POSTGRES_DB: marketviz
+            POSTGRES_USER: marketviz
+            POSTGRES_PASSWORD: marketviz
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U marketviz"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    backend:
+        build: ./backend
+        env_file:
+            - .env
+        environment:
+            DB_HOST: postgres
+            DB_PORT: 5432
+            DB_NAME: marketviz
+            DB_USER: marketviz
+            DB_PASSWORD: marketviz
+        ports:
+            - "8080:8080"
+        depends_on:
+            postgres:
+                condition: service_healthy
+
+    frontend:
+        build: ./frontend
+        ports:
+            - "3000:80"
+        depends_on:
+            - backend
+
+volumes:
+    postgres_data:
