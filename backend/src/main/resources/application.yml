@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: marketviz-backend
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:marketviz}
+    username: ${DB_USER:marketviz}
+    password: ${DB_PASSWORD:marketviz}
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-production-needs-at-least-32-chars!!}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+  twelve-data:
+    api-key: ${TWELVE_DATA_API_KEY:}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+logging:
+  level:
+    com.marketviz: DEBUG
+    org.springframework.security: INFO
+    org.flywaydb: INFO
