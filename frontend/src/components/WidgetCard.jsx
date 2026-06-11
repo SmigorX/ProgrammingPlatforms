@@ -45,6 +45,32 @@ export default function WidgetCard({ widget, onEdit, onDelete }) {
       .finally(() => setLoading(false));
   }, [widget.asset.id, widget.timeRange]);
 
+  const handleExportCSV = () => {
+    if (!prices || prices.length === 0) {
+      alert("No data available to export!");
+      return;
+    }
+    
+    // Extract headers from the first data object
+    const headers = Object.keys(prices[0]).join(',');
+    
+    // Convert data array to CSV format
+    const csv = prices.map(row => Object.values(row).join(',')).join('\n');
+    
+    // Create a downloadable file in the browser
+    const blob = new Blob([`${headers}\n${csv}`], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    
+    // Set the file name based on the asset symbol (e.g., "AAPL_data.csv")
+    link.setAttribute('download', `${widget.asset.symbol}_data.csv`);
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const ChartComponent = CHART_COMPONENTS[widget.chartType] ?? PriceLineChart;
 
   return (
@@ -57,6 +83,7 @@ export default function WidgetCard({ widget, onEdit, onDelete }) {
           </div>
         </div>
         <div className="widget-actions">
+          <button className="icon-btn" onClick={handleExportCSV} title="Export to CSV">📥</button>
           <button className="icon-btn" onClick={onEdit} title="Edit widget">✎</button>
           <button className="icon-btn danger" onClick={onDelete} title="Remove widget">✕</button>
         </div>
