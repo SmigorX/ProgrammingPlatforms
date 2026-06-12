@@ -45,6 +45,9 @@ MarketViz is a three-tier web application:
    date-bounded JPA query.
 3. Results are projected to `PricePointResponse` records and serialised as JSON.
 4. The frontend feeds the array into a Recharts `LineChart`, `BarChart`, or renders a table.
+5. The same in-memory array is also the source for the per-widget **Export to CSV** button,
+   which serialises it client-side (no extra backend call) and triggers a browser download
+   as `{SYMBOL}_data.csv` via a `Blob` + temporary `<a download>` link.
 
 ### Auth path
 1. `POST /api/auth/register` or `/login` → `AuthService` → Spring Security `AuthenticationManager`
@@ -78,7 +81,9 @@ src/
 ├── api/             Thin axios wrappers per domain
 ├── components/
 │   ├── charts/      PriceLineChart, PriceBarChart, PriceTable, NumberWidget
-│   └── layout/      NavBar, ProtectedRoute
+│   ├── layout/      NavBar, ProtectedRoute
+│   ├── WidgetCard.jsx       Renders a chart + edit/delete/CSV-export controls
+│   └── AddWidgetModal.jsx   Create/edit widget form
 ├── contexts/        AuthContext (JWT + localStorage)
 └── pages/           LoginPage, RegisterPage, DashboardPage
 ```

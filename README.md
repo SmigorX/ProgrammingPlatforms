@@ -17,6 +17,8 @@ PostgreSQL store.
 - **Dashboards** — multiple named dashboards per user, persisted server-side (synced across browsers).
 - **Widgets** — line chart, bar chart, data table, or single-number tile per asset, with configurable
   time range (1 M / 3 M / 6 M / 1 Y / 3 Y / 5 Y) and colour.
+- **CSV export** — each widget has a one-click export that downloads the currently
+  loaded price series as `{SYMBOL}_data.csv`.
 - **Daily ingestion** — cron-driven full-history pull (idempotent via `UNIQUE(asset_id, timestamp)`).
 - **OpenAPI / Swagger UI** — full interactive API reference at `/swagger-ui.html`.
 - **Dockerised** — `docker compose up` brings up Postgres, backend, and frontend.
